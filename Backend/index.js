@@ -14,6 +14,10 @@ const user=require('./routes/Usersroutes');
 const admin=require('./routes/adminroutes');
 const work=require('./routes/workroutes');
 
+app.get('/', (req, res) => {
+    res.send('Hello, World!');
+});
+
 app.use("/api/v1",tester);
 app.use("/api/v1/user",user);
 app.use("/api/v1/admin",admin);
