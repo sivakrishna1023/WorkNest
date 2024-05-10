@@ -13,9 +13,9 @@ const Header = () => {
           <div className='font-bold text-2xl md:cursor-pointer flex justify-between gap-1 pr-7' >
             <div className="flex gap-1">
             <BeakerIcon className='w-7 h-7 text-blue-600'/>
-            <span>Inscrible</span>
+            <span>WorkNest</span>
             </div>
-            <div className="md:hidden" onClick={()=>{setopen(!open)}}  >
+            <div className="md:hidden" onClick={()=>{setopen(!open)}}>
             {
               !open ?(
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
