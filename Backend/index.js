@@ -14,8 +14,11 @@ app.use(cors({
     origin:"https://work-nest-omega.vercel.app",
     methods:["GET","POST","PUT","DELETE"],
     credentials:true
+    },{
+        origin:"http://localhost:3000",
+        methods:["GET","POST","PUT","DELETE"],
+        credentials:true
     }
-
 ));
 app.use(express.json());
 
