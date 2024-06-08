@@ -15,6 +15,7 @@ import {
 import { styled } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import { domain, server } from '../constants/config';
 
 const OpenDialogButton = styled(Button)(({ theme }) => ({
   // margin: theme.spacing(10),
@@ -101,7 +102,7 @@ const FormComponent = () => {
     }
     console.log(newobj);
     try{
-      const newpromise=await fetch('http://localhost:3000/api/v1/work/createnew',{
+      const newpromise=await fetch(`${server}/api/v1/work/createnew`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ const FormComponent = () => {
     console.log(data);
     alert('New Role added with given Specifications');
     setTimeout(() => {
-      window.location.href="http://localhost:3001/admin"
+      window.location.href=`${domain}/admin`
     }, 500);
 } catch (error) {
   console.error('There has been a problem with your fetch operation:', error);

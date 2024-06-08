@@ -1,12 +1,12 @@
 import './App.css';
-import Home from './Components/MainComponent/Home'
-import Signin from './Components/Signin';
-import Signup from './Components/Signup';
-import Ainterface from './Components/AddNewRole'
+import Home from './Pages/Home'
+import Signin from './Pages/Signin';
+import Signup from './Pages/Signup';
+import Ainterface from './Pages/AddNewRole'
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
-import AppBar from './Components/MainComponent/Appbar';
-import Uadmin from './Components/Updateadmin'
-import WorkAccordion from './Components/Allworks';
+import AppBar from './Components/Appbar';
+import Uadmin from './Pages/Updateadmin'
+import WorkAccordion from './Pages/Allworks';
 function App() {
   return (
     <Router>

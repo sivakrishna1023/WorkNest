@@ -9,12 +9,13 @@ import {
   } from "@mui/material";
   import CloseIcon from "@mui/icons-material/Close";
   import IconButton from "@mui/material/IconButton";
+  import { server,domain } from '../constants/config';
 
 const WorkAccordion = () => {
   const [works, setWorks] = useState([]);
   const [open, setOpen] = useState(false);
   const fetchWorks = () => {
-    fetch('http://localhost:3000/api/v1/work/myuploads',{
+    fetch(`${server}/api/v1/work/myuploads`,{
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ useEffect(() => {
   };
 
   const handleDeleteWork = (work) => {
-    fetch('http://localhost:3000/api/v1/work/deletework',{
+    fetch(`${server}/api/v1/work/deletework`,{
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

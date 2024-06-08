@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Features from './Feature';
-import Hero from './Hero';
-import Appbar from './Appbar';
-import Footer from './Footer';
+import Features from '../Components/Feature';
+import Hero from '../Components/Hero';
+import Appbar from '../Components/Appbar';
+import Footer from '../Components/Footer';
 
 
 function AppAppBar() {

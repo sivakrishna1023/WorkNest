@@ -1,35 +1,24 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useDispatch,  } from 'react-redux';
-// import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {actionCreators} from '../state/index';
+import { domain, server } from '../constants/config';
 
-export default function LoginTeam(props) {
+export default function LoginTeam() {
   const [teamPassword, setTeamPassword] = useState('');
   const [teamUsername, setTeamUsername] = useState('');
-  const [teamMemberName, setTeamMemberName] = useState('');
-  const [teamCompany, setTeamCompany] = useState('');
   const [showTeamPassword, setShowTeamPassword] = useState(false);
   const [showTeamForm, setShowTeamForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [individualname, setindividualname] = useState('');
 
   const handleTeamUsernameChange = (e) => {
     setTeamUsername(e.target.value);
   };
-
-  const handleTeamCompany = (e) => {
-    setTeamCompany(e.target.value);
-  };
-
-  const handleTeamMemberNameChange = (e) => {
-    setTeamMemberName(e.target.value);
-  };
-
+ 
   const handleTeamPasswordChange = (e) => {
     setTeamPassword(e.target.value);
   };
@@ -53,75 +42,73 @@ export default function LoginTeam(props) {
   const handleChange = (prop) => (event) => {
     if (prop === 'username') setUsername(event.target.value);
     else if (prop === 'password') setPassword(event.target.value);
-    else if (prop === 'individualname') setindividualname(event.target.value);
   };
-  
-  // const userDetails=useSelector(state=>state.userdetails);
-  const dispatch=useDispatch();
-  const {getdetails}=bindActionCreators(actionCreators,dispatch);
+  const userDetails=useSelector(state=>state.userdetails);
+  const dispatc=useDispatch();
+  const {getdetails}=bindActionCreators(actionCreators,dispatc);
+
   const signing2=async()=>{
-      const user={
-          name:teamMemberName,
-          email:teamUsername,
-          password:teamPassword,
-          company:teamCompany
-        }
-      getdetails(user);
-      try{
-          const newpromise=await fetch('http://localhost:3000/api/v1/admin/register',{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(user)
-        })
-        if (!newpromise.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await newpromise.json();
-        console.log(data);
-        alert('Sign Up Successful');
-        let m=' ';
-    localStorage.setItem('token','Bearer'+m+ data['token']);
-      window.location.href='http://localhost:3001/admin'
-    } catch (error) {
-      console.error('There has been a problem with your fetch operation:', error);
-      alert('Sign Up Not Successful');
+    const user={
+      email:teamUsername,
+      password:teamPassword
     }
-  }
-  const signing=async()=>{
+    getdetails(user);
+    try{
+      const newpromise=await fetch(`${server}/api/v1/admin/login`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    })
+    if (!newpromise.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await newpromise.json();
+    console.log(data);
+    alert('Sign In Successful');
+    let m=' ';
+    localStorage.setItem('token','Bearer' +m+ data['token'])
+    console.log(localStorage.getItem('token'));
+    window.location.href=`${domain}/admin`
+} catch (error) {
+  console.error('There has been a problem with your fetch operation:', error);
+  alert('Sign In Not Successful');
+}
+      
+    }
+    const signing=async()=>{
         const user={
-          name:individualname,
           email:username,
           password:password
         }
         getdetails(user);
-        try{
-          const newpromise=await fetch('http://localhost:3000/api/v1/user/register',{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(user)
-        })
-        if (!newpromise.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await newpromise.json();
-        console.log(data);
-        alert('Sign Up Successful');
-        let m=' ';
-    localStorage.setItem('token','Bearer'+m+data['token'])
-      window.location.href='http://localhost:3001/user'
-    } catch (error) {
-      console.error('There has been a problem with your fetch operation:', error);
-      alert('Sign Up Not Successful');
-    }
-        
+      console.log(userDetails);
+      try{
+        const newpromise=await fetch(`${server}/api/v1/user/login`,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      })
+      if (!newpromise.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await newpromise.json();
+      console.log(data);
+      alert('Sign Up Successful');
+      let m=' ';
+      localStorage.setItem('token','Bearer'+ m +data['token'])
+      window.location.href=`${domain}/user`
+  } catch (error) {
+    console.error('There has been a problem with your fetch operation:', error);
+    alert('Sign Up Not Successful');
+  }
   }
   return (
     <Container maxWidth="sm" style={{ padding: '2%', marginTop: '10%' }}>
-      <Typography variant="h4" align="center" gutterBottom>Sign Up</Typography>
+      <Typography variant="h4" align="center" gutterBottom>Sign In</Typography>
       <Box display="flex" justifyContent="space-evenly" marginTop="16px">
         <Typography variant="subtitle1" onClick={handleIndividualClick} style={{ cursor: 'pointer' }}>
           For Job Seekers
@@ -132,16 +119,8 @@ export default function LoginTeam(props) {
       </Box>
 
       {showTeamForm ? (
-        <Box marginTop="16px">    
-         
-          <TextField
-            label="Name of the Recruiter"
-            variant="outlined"
-            fullWidth
-            margin="dense"
-            value={teamMemberName}
-            onChange={handleTeamMemberNameChange}
-          />
+
+        <Box marginTop="16px"> 
           <TextField
             label="Email Address of the Recruiter"
             variant="outlined"
@@ -149,7 +128,7 @@ export default function LoginTeam(props) {
             margin="dense"
             value={teamUsername}
             onChange={handleTeamUsernameChange}
-          />
+          />   
           <TextField
             id="teamPassword"
             label="Password of the Recruiter"
@@ -169,14 +148,7 @@ export default function LoginTeam(props) {
             }}
             
           />
-           <TextField
-            label="Company of the Recruiter"
-            variant="outlined"
-            fullWidth
-            margin="dense"
-            value={teamCompany}
-            onChange={handleTeamCompany}
-          />
+           
           <Box display="flex" justifyContent="center" marginTop="16px">
             <Button
               variant="contained"
@@ -184,20 +156,12 @@ export default function LoginTeam(props) {
               onClick={signing2}
               style={{ width: '50%' }}
             >
-              Sign Up
+              Sign In
             </Button>
           </Box>
         </Box>
       ) : (
         <Box marginTop="16px">
-          <TextField
-            label="Name of the Individual"
-            variant="outlined"
-            fullWidth
-            margin="dense"
-            value={individualname}
-            onChange={handleChange('individualname')}
-          />
           <TextField
             label="Email Address"
             variant="outlined"
@@ -231,7 +195,7 @@ export default function LoginTeam(props) {
               onClick={signing}
               style={{ width: '50%' }}
             >
-              Sign Up
+              Sign In
             </Button>
           </Box>
         </Box>

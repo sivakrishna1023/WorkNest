@@ -11,6 +11,7 @@ import {
 import { styled } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { domain, server } from "../constants/config";
 export default function Updateadmin() {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ export default function Updateadmin() {
         company:formData.company
     }
     try{
-        const newpromise=await fetch('http://localhost:3000/api/v1/admin/update',{
+        const newpromise=await fetch(`${server}/api/v1/admin/update`,{
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ export default function Updateadmin() {
       const data = await newpromise.json();
       console.log(data);
       alert('Updated Admin Account');
-      window.location.href='http://localhost:3001/admin'
+      window.location.href=`${domain}/admin`
   } catch (error) {
     console.error('There has been a problem with your fetch operation:', error);
     alert('Could  Not Update Admin Account');
