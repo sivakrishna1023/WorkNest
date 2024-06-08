@@ -1,2 +1,2 @@
-export const server = process.env.VITE_SERVER
-export const domain = process.env.DOMAIN
+export const server = 'https://work-nest-u5wu.vercel.app'
+export const domain = 'http://localhost:3000'

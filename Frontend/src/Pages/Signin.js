@@ -14,7 +14,7 @@ export default function LoginTeam() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-
+  console.log(server);
   const handleTeamUsernameChange = (e) => {
     setTeamUsername(e.target.value);
   };
