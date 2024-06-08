@@ -82,15 +82,18 @@ exports.details=catchAsyncErrors(async(req,res,next)=>{
 // delete the existing once
 
 exports.deletework=catchAsyncErrors(async(req,res,next)=>{
-    const id=req.headers.id;
-    const isvalid=await Work.findById(id);
+    const _id=req.headers.id;
+    const isvalid = await Work.findOne({ _id: _id });
     if(!isvalid){
         return next(new ErrorHander("Work not found", 401));
     }
-    if(!req.admin._id.equals(isvalid.admin)){
+    if(req.headers.admin!==(isvalid.admin).toString()){
+        console.log(req.headers.admin)
+        console.log(isvalid.admin)
+
         return next(new ErrorHander("Your are not allowed to Delete this..!!", 401));
     }
-    await Work.findByIdAndDelete(id);
+    await Work.findByIdAndDelete(isvalid._id);
     res.status(200).json({
         success:true,
         message:"Work deleted successfully"
