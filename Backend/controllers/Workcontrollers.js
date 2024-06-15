@@ -2,15 +2,16 @@ const ErrorHander=require('../utils/errorhandler');
 const catchAsyncErrors=require('../middlewares/catchAsyncerrors');
 const Admin=require('../models/Adminmodel');
 const Work= require('../models/workmodel');
+const catchAsyncerrors = require('../middlewares/catchAsyncerrors');
 
 // create a new once
 exports.createNew=catchAsyncErrors(async(req,res,next)=>{
-     const {Role,description,salary,location,logo}=req.body;
+     const {Role,description,salary,location,company,logo}=req.body;
      const _id=req.admin.id;
      const work = await Work.create({
         Role,
         description,
-        company:req.admin.company,
+        company,
         salary,
         location,
         logo,
@@ -25,11 +26,12 @@ exports.createNew=catchAsyncErrors(async(req,res,next)=>{
 // update the exisiting once
 
 exports.update=catchAsyncErrors(async(req,res,next)=>{
-    const {Role,description,salary,location,logo,id}=req.body;
+    const {Role,description,salary,location,logo,company,id}=req.body;
     const updateddata={
         Role,
         description,
         salary,
+        company,
         location,
         logo,
     }
@@ -100,3 +102,46 @@ exports.deletework=catchAsyncErrors(async(req,res,next)=>{
     })
 })
 
+//getting all jobs added till now
+exports.getalljobs=catchAsyncerrors(async(req,res,next)=>{
+    const works = await Work.find({});
+    res.status(200).json({
+        success:true,
+        message:"Your data",
+        works,
+    })
+})
+
+//filter jobs by salary by location by role
+exports.byvariables=catchAsyncErrors(async(req,res,next)=>{
+    const {amount,place,name,company}=req.body
+     let query = {};
+  
+  // Add criteria based on the presence of the variables
+  if (amount !== undefined && amount !== null && amount !== '') {
+    query.salary = { $gte: amount };
+  }
+  if (place !== undefined && place !== null && place !== '') {
+    query.location = place;
+  } else {
+    // Ensure location is not empty if place is not provided
+    query.location = { $ne: '' };
+  }
+  if (name !== undefined && name !== null && name !== '') {
+    query.Role = name;
+  }
+  if (company !== undefined && company !== null && company !== '') {
+    query.company = company;
+  }
+
+  // Log the query object for debugging
+  console.log('Query:', query);
+
+  // If no criteria specified, return all documents
+  const works = await Work.find(query);
+    res.status(200).json({
+        success:true,
+        message:"Jobs having given specifications",
+        works,
+    })
+})
