@@ -1,6 +1,6 @@
 const reducer = (state = null, action) => {
     switch (action.type) {
-        case 'getusername':
+        case 'getuser':
             return action.payload;
         default:
             return state;

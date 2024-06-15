@@ -1,7 +1,7 @@
 export const getdetails=(user)=>{
         return (dispatch)=>{
             dispatch({
-                type:'getusername',
+                type:'getuser',
                 payload:user
             });
         };

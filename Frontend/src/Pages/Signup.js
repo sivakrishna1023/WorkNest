@@ -67,6 +67,7 @@ export default function LoginTeam(props) {
         }
       getdetails(user);
       try{
+        // console.log(`${server}/api/v1/admin/register);
           const newpromise=await fetch(`${server}/api/v1/admin/register`,{
           method: 'POST',
           headers: {
