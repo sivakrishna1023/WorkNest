@@ -10,6 +10,15 @@ import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 
 export default function Appbar(props) {
+  const deletinguser=()=>{
+
+  }
+  const signoutuser=()=>{
+
+  }
+  const signoutadmin=()=>{
+
+  }
   const deletingadmin=async()=>{
     try{
       const newpromise=await fetch('http://localhost:3000/api/v1/admin/delete',{
@@ -163,9 +172,27 @@ export default function Appbar(props) {
                 <Button
                   variant="body2"
                   style={{ color: "blue", background: "none", padding: "0%" }}
-                  href="/"
+                 onClick={signoutadmin}
                 >
                   {props.name5}
+                </Button>
+              </MenuItem>}
+              {props.name6 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={deletinguser}
+                >
+                  {props.name6}
+                </Button>
+              </MenuItem>}
+              {props.name7 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={signoutuser}
+                >
+                  {props.name7}
                 </Button>
               </MenuItem>}
             </Box>
@@ -257,6 +284,24 @@ export default function Appbar(props) {
                   href="/"
                 >
                   {props.name5}
+                </Button>
+              </MenuItem>}
+              {props.name6 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={deletinguser}
+                >
+                  {props.name6}
+                </Button>
+              </MenuItem>}
+              {props.name7 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={signoutuser}
+                >
+                  {props.name7}
                 </Button>
               </MenuItem>}
               </Box>

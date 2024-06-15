@@ -15,7 +15,7 @@ import {
 import { styled } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { domain, server } from '../constants/config';
+// import { domain, server } from '../constants/config';
 
 const OpenDialogButton = styled(Button)(({ theme }) => ({
   // margin: theme.spacing(10),
@@ -42,11 +42,11 @@ const FormComponent = () => {
   const [open, setOpen] = useState(false);
   const [imageData, setImageData] = useState('');
   const [formData, setFormData] = useState({
-    role: '',
+    role: "",
     description: '',
-    company: '',
-    salary: '',
-    location: '',
+    company: "",
+    salary: "",
+    location: "",
     logo: null,
   });
 
@@ -66,13 +66,7 @@ const FormComponent = () => {
     });
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+ 
 
   const handleLogoChange = (e) => {
     setFormData({
@@ -90,6 +84,13 @@ const FormComponent = () => {
     reader.readAsDataURL(file);
     console.log('Image Data:', imageData);
   };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const handleSubmit = async() => {
     const newobj={
@@ -100,9 +101,9 @@ const FormComponent = () => {
     location: formData.location,
     logo: imageData,
     }
-    console.log(newobj);
+    // console.log(formData.company);
     try{
-      const newpromise=await fetch(`${server}/api/v1/work/createnew`,{
+      const newpromise=await fetch('http://localhost:3000/api/v1/work/createnew',{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -117,7 +118,7 @@ const FormComponent = () => {
     console.log(data);
     alert('New Role added with given Specifications');
     setTimeout(() => {
-      window.location.href=`${domain}/admin`
+      window.location.href="http://localhost:3001/admin"
     }, 500);
 } catch (error) {
   console.error('There has been a problem with your fetch operation:', error);
@@ -125,6 +126,7 @@ const FormComponent = () => {
 }
     handleClose();
   };
+  
 
   return (
     <Container sx={{marginTop:'2%', marginLeft:'64%'}}>
@@ -223,8 +225,8 @@ const FormComponent = () => {
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <AddRoleButton onClick={()=>{handleSubmit();}}>
-            Add Role
+          <AddRoleButton onClick={()=>{handleSubmit()}}>
+          Add New Role
           </AddRoleButton>
         </DialogActions>
       </Dialog>
