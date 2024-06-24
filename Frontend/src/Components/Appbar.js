@@ -195,6 +195,24 @@ export default function Appbar(props) {
                   {props.name7}
                 </Button>
               </MenuItem>}
+              {props.name8 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={props.clicking}
+                >
+                  {props.name8}
+                </Button>
+              </MenuItem>}
+              {props.name9 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={props.clicking2}
+                >
+                  {props.name9}
+                </Button>
+              </MenuItem>}
             </Box>
           </Box>
           <Box
@@ -302,6 +320,24 @@ export default function Appbar(props) {
                   onClick={signoutuser}
                 >
                   {props.name7}
+                </Button>
+              </MenuItem>}
+              {props.name8 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={props.clicking}
+                >
+                  {props.name8}
+                </Button>
+              </MenuItem>}
+              {props.name9 && <MenuItem sx={{ py: "6px", px: "12px" }}>
+                <Button
+                  variant="body2"
+                  style={{ color: "blue", background: "none", padding: "0%" }}
+                  onClick={props.clicking2}
+                >
+                  {props.name9}
                 </Button>
               </MenuItem>}
               </Box>

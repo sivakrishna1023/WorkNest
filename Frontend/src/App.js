@@ -6,6 +6,7 @@ import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
 import AppBar from './Components/Appbar';
 import AdminElements from './Pages/AdminElements';
 import UserElements from './Pages/UserElements'
+import Applyjob from './Pages/Applyjob';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route exact path='/' element={<Home></Home>}/>
         <Route exact path='/admin' element={<AdminElements/>}/>
         <Route exact path='/user' element={<UserElements/>}/>
-        {/* <Route exact path='/tt' element={<FilterComponent/>}/> */}
+        <Route exact path='/applyjob' element={<Applyjob/>}/>
       </Routes>
     </Router>
   );

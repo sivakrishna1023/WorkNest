@@ -4,6 +4,7 @@ const Admin=require('../models/Adminmodel');
 const Work= require('../models/workmodel');
 const catchAsyncerrors = require('../middlewares/catchAsyncerrors');
 
+
 // create a new once
 exports.createNew=catchAsyncErrors(async(req,res,next)=>{
      const {Role,description,salary,location,company,logo}=req.body;
@@ -16,6 +17,7 @@ exports.createNew=catchAsyncErrors(async(req,res,next)=>{
         location,
         logo,
         admin:_id,
+        applied:[]
      });
      res.status(200).json({
         success:true,
@@ -105,19 +107,59 @@ exports.deletework=catchAsyncErrors(async(req,res,next)=>{
 //getting all jobs added till now
 exports.getalljobs=catchAsyncerrors(async(req,res,next)=>{
     const works = await Work.find({});
+        const reqworks = [];
+        for (const work of works) {
+            let temp=false;
+            for (const application of work.applied) {
+                if (application.userid.equals(req.user._id)) {
+                    temp=true;
+                    break;
+                }
+            }
+            if(temp===false)reqworks.push(work);
+        }
     res.status(200).json({
         success:true,
         message:"Your data",
-        works,
+        works:reqworks,
+    })
+})  
+
+//apply to a work
+exports.applywork=catchAsyncErrors(async(req,res,next)=>{
+    console.log(req.file,req.body.name,req.body.skills,req.body.whyJoin,req.body.jobid);
+    console.log(req.user._id);
+    const work=await Work.find({_id:req.body.jobid});
+    if (!work) {
+        return res.status(404).json({
+            success: false,
+            message: "Job not found"
+        });
+    }
+    
+    console.log(work,"first")
+    work[0].applied.push({
+        "name":req.body.name,
+        "skills":req.body.skills,
+        "whyJoin":req.body.whyJoin,
+        "path":req.file.path,
+        "userid":req.user._id
+    })
+    console.log(work,"second")
+    await work[0].save();
+    res.status(200).json({
+        success:true,
+        message:"Work Applied Successfully",
     })
 })
 
-//filter jobs by salary by location by role
+
+//filter jobs by salary by location by role by company
 exports.byvariables=catchAsyncErrors(async(req,res,next)=>{
     const {amount,place,name,company}=req.body
      let query = {};
   
-  // Add criteria based on the presence of the variables
+
   if (amount !== undefined && amount !== null && amount !== '') {
     query.salary = { $gte: amount };
   }
@@ -139,9 +181,48 @@ exports.byvariables=catchAsyncErrors(async(req,res,next)=>{
 
   // If no criteria specified, return all documents
   const works = await Work.find(query);
+        const reqworks = [];
+        for (const work of works) {
+            let temp=false;
+            for (const application of work.applied) {
+                if (application.userid.equals(req.user._id)) {
+                    temp=true;
+                    break;
+                }
+            }
+            if(temp===false)reqworks.push(work);
+        }
     res.status(200).json({
         success:true,
         message:"Jobs having given specifications",
         works,
     })
+})
+
+//appied works
+exports.worksapplied=catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const works = await Work.find({});
+        const reqworks = [];
+
+        for (const work of works) {
+            for (const application of work.applied) {
+                if (application.userid.equals(req.user._id)) {
+                    reqworks.push(work);
+                    break;
+                }
+            }
+        }
+
+        res.status(200).json({
+            message: 'Works retrieved successfully',
+            works: reqworks
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'An error occurred',
+            error
+        });
+    }
 })

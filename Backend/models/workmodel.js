@@ -1,4 +1,5 @@
 const mongoose=require("mongoose");
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const workSchema=mongoose.Schema({
     Role:{
@@ -29,7 +30,14 @@ const workSchema=mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin', 
         required: true
-    }
+    },
+    applied:[{
+        name: String,
+        skills: String,
+        whyJoin: String,
+        path: String,
+        userid: ObjectId
+    }]
 })
 
 module.exports = mongoose.model("Work", workSchema);
