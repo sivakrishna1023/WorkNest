@@ -9,7 +9,9 @@ const{
     getalljobs,
     byvariables,
     applywork,
-    worksapplied
+    worksapplied,
+    applicantsofwork,
+    downloadpdfs
 }=require('../controllers/Workcontrollers')
 
 const {isAuthenticatedAdmin, isAuthenticated}=require('../middlewares/auth')
@@ -20,7 +22,7 @@ router.use(express.urlencoded({extended:false}));
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './files')
+      cb(null, '../Backend/controllers/files')
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now();
@@ -46,4 +48,9 @@ router.route('/jobsbyvariables').post(isAuthenticated,byvariables);
 router.route('/applyjobs').post(isAuthenticated, uploaded.single("file"),applywork);
 
 router.route('/appliedworks').post(isAuthenticated, worksapplied);
+
+router.route('/workapplicants').get(isAuthenticatedAdmin,applicantsofwork);
+
+router.route('/download').get(isAuthenticatedAdmin, downloadpdfs);
+
 module.exports = router;

@@ -3,7 +3,7 @@ const catchAsyncErrors=require('../middlewares/catchAsyncerrors');
 const Admin=require('../models/Adminmodel');
 const Work= require('../models/workmodel');
 const catchAsyncerrors = require('../middlewares/catchAsyncerrors');
-
+const path=require('path')
 
 // create a new once
 exports.createNew=catchAsyncErrors(async(req,res,next)=>{
@@ -83,6 +83,18 @@ exports.details=catchAsyncErrors(async(req,res,next)=>{
     })
 })
 
+//users applied to a work
+exports.applicantsofwork=catchAsyncErrors(async(req,res,next)=>{
+    const id=req.query.id;
+    const isvalid=await Work.findById(id);
+    const reqapplicants=isvalid.applied;
+    console.log(reqapplicants);
+    res.status(200).json({
+        success:true,
+        message:"Found Applicants",
+        applicants:reqapplicants,
+    })
+})
 // delete the existing once
 
 exports.deletework=catchAsyncErrors(async(req,res,next)=>{
@@ -225,4 +237,23 @@ exports.worksapplied=catchAsyncErrors(async(req,res,next)=>{
             error
         });
     }
+})
+
+//download pdfs
+
+exports.downloadpdfs=catchAsyncErrors(async(req,res)=>{
+    const pat = req.query.path;
+    console.log(pat);
+    const parentDir = path.dirname(__dirname);
+
+const filePath = path.join(parentDir, pat);
+
+console.log(filePath); 
+    console.log(filePath);
+    res.download(filePath, (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Error downloading file');
+      }
+    });
 })
