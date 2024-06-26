@@ -24,7 +24,8 @@ export default function Appbar(props) {
       const newpromise=await fetch('http://localhost:3000/api/v1/admin/delete',{
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'authorization':localStorage.getItem('token')
       },
       body: JSON.stringify({})
     })

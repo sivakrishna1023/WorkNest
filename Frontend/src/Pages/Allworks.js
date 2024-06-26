@@ -214,6 +214,7 @@ useEffect(() => {
     handleClose();
   };
   
+  
   return (
     <div>
         <Box sx={{ width: '70%', marginTop:'13%', marginLeft:'10%'}}>
@@ -232,6 +233,9 @@ useEffect(() => {
                 </Button>
                 <Button variant="contained" color="primary" onClick={() => onclickUpdate(work)} sx={{ ml: 2 }}>
                 Update Work
+                </Button>
+                <Button variant="contained" color="primary" href={`/workapplicants?id=${work._id}`}  sx={{ ml: 2 }}>
+                Job Applicants
                 </Button>
             </AccordionDetails>
             </Accordion>

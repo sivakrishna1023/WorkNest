@@ -7,6 +7,7 @@ import AppBar from './Components/Appbar';
 import AdminElements from './Pages/AdminElements';
 import UserElements from './Pages/UserElements'
 import Applyjob from './Pages/Applyjob';
+import Applicants from './Pages/Applicants';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path='/admin' element={<AdminElements/>}/>
         <Route exact path='/user' element={<UserElements/>}/>
         <Route exact path='/applyjob' element={<Applyjob/>}/>
+        <Route exact path='/workapplicants' element={<Applicants/>}/>
       </Routes>
     </Router>
   );
