@@ -94,7 +94,7 @@ exports.deleteUser=catchAsyncErrors(async(req,res,next)=>{
     })
 })
 
-// Forgot password
-
-// Reset password
-
+//Log Out User
+exports.logoutuser=catchAsyncErrors(async(req,res)=>{
+    process.env.JWT_EXPIRE=0;
+})

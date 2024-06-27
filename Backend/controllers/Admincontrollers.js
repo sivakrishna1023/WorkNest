@@ -39,11 +39,27 @@ exports.LoginAdmin=catchAsyncErrors(async(req,res,next)=>{
 
 // Delete Admin
 exports.deleteAdmin=catchAsyncErrors(async(req,res,next)=>{
-    await Admin.findByIdAndDelete(req.admin._id);
-    res.status(200).json({
-        success:true,
-        message:"User deleted successfully"
-    })
+    try {
+        // Delete the Admin by ID
+        await Admin.findByIdAndDelete(req.admin._id);
+        const adminId = req.admin._id;
+    
+        // Delete all works associated with the Admin
+        await Work.deleteMany({ admin: adminId });
+    
+        // Send success response
+        res.status(200).json({
+          success: true,
+          message: 'Admin and associated works deleted successfully',
+        });
+      } catch (err) {
+        // Handle any errors
+        console.error('Error deleting documents:', err);
+        res.status(500).json({
+          success: false,
+          message: 'Error deleting admin and associated works',
+        });
+      }
 })
 
 // Update the Admin
@@ -61,4 +77,9 @@ exports.updateAdmin=catchAsyncErrors(async(req,res,next)=>{
         success: true,
         admin,
       });
+})
+
+//Log Out Admin
+exports.logoutadmin=catchAsyncErrors(async(req,res)=>{
+    
 })
