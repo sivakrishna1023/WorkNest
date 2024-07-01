@@ -5,54 +5,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {actionCreators} from '../state/index';
 import { domain, server } from '../constants/config';
+import { Toaster,toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginTeam() {
-  const [teamPassword, setTeamPassword] = useState('');
-  const [teamUsername, setTeamUsername] = useState('');
-  const [showTeamPassword, setShowTeamPassword] = useState(false);
-  const [showTeamForm, setShowTeamForm] = useState(false);
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
+  const [isLoading,setIsLoading]=useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  console.log(server);
-  const handleTeamUsernameChange = (e) => {
-    setTeamUsername(e.target.value);
-  };
- 
-  const handleTeamPasswordChange = (e) => {
-    setTeamPassword(e.target.value);
-  };
-
-  const toggleTeamPasswordVisibility = () => {
-    setShowTeamPassword(!showTeamPassword);
-  };
-
+  const [email, setEmail] = useState('');
+  
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleIndividualClick = () => {
-    setShowTeamForm(false);
-  };
-
-  const handleTeamClick = () => {
-    setShowTeamForm(true);
-  };
-
   const handleChange = (prop) => (event) => {
-    if (prop === 'username') setUsername(event.target.value);
+    if (prop === 'email') setEmail(event.target.value);
     else if (prop === 'password') setPassword(event.target.value);
   };
   const userDetails=useSelector(state=>state.userdetails);
-  const dispatc=useDispatch();
-  const {getdetails}=bindActionCreators(actionCreators,dispatc);
+  const {getdetails}=bindActionCreators(actionCreators,dispatch);
 
-  const signing2=async()=>{
+  const signInRecruiter=async()=>{
     const user={
-      email:teamUsername,
-      password:teamPassword
+      email:email,
+      password:password
     }
-    getdetails(user);
+    setIsLoading(true);
+    const toastId=toast.loading("Siging In...");
     try{
       const newpromise=await fetch(`${server}/api/v1/admin/login`,{
       method: 'POST',
@@ -62,28 +43,33 @@ export default function LoginTeam() {
       body: JSON.stringify(user)
     })
     if (!newpromise.ok) {
+      toast.error("Failed to sign In",{id:toastId});
       throw new Error('Network response was not ok');
     }
     const data = await newpromise.json();
     console.log(data);
-    alert('Sign In Successful');
-    let m=' ';
-    localStorage.setItem('token','Bearer' +m+ data['token'])
-    console.log(localStorage.getItem('token'));
-    window.location.href=`${domain}/admin`
-} catch (error) {
-  console.error('There has been a problem with your fetch operation:', error);
-  alert('Sign In Not Successful');
-}
-      
+    if(data.succes){
+      getdetails(data?.user);
+      toast.success("Successfully signed In..",{id:toastId});
+      localStorage.setItem('token',data?.token);
+      navigate('/admin');
+    }else{
+      toast.error("Failed to sign In",{id:toastId});
     }
-    const signing=async()=>{
+    } catch (error) {
+      console.error('There has been a problem with your fetch operation:', error);
+      toast.error('Try again later..',{id:toastId});
+    }finally{
+      setIsLoading(false);
+    } 
+}
+    const signInCadidate=async()=>{
         const user={
-          email:username,
+          email:email,
           password:password
         }
-        getdetails(user);
-      console.log(userDetails);
+      const toastId=toast.loading("Please wait..")
+      setIsLoading(false);
       try{
         const newpromise=await fetch(`${server}/api/v1/user/login`,{
         method: 'POST',
@@ -93,82 +79,40 @@ export default function LoginTeam() {
         body: JSON.stringify(user)
       })
       if (!newpromise.ok) {
+        toast.error("Failed to sign In",{id:toastId});
         throw new Error('Network response was not ok');
       }
       const data = await newpromise.json();
-      console.log(data);
-      alert('Sign Up Successful');
-      let m=' ';
-      localStorage.setItem('token','Bearer'+ m +data['token'])
-      window.location.href=`${domain}/user`
-  } catch (error) {
-    console.error('There has been a problem with your fetch operation:', error);
-    alert('Sign Up Not Successful');
-  }
-  }
+        if(data.success){
+          toast.success('Succefully logged In..',{id:toastId});
+          localStorage.setItem('token',data?.token);
+          navigate('/user');
+        }else{
+          toast.error(data?.message || 'Try again Later',{id:toastId});
+        }
+      } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        toast.error("Try again Later...",toastId);
+      }finally{
+        setIsLoading(false);
+      }
+}
   return (
+    <>
+    <Toaster
+    position="top-center"
+    reverseOrder={false}
+    />
     <Container maxWidth="sm" style={{ padding: '2%', marginTop: '10%' }}>
       <Typography variant="h4" align="center" gutterBottom>Sign In</Typography>
-      <Box display="flex" justifyContent="space-evenly" marginTop="16px">
-        <Typography variant="subtitle1" onClick={handleIndividualClick} style={{ cursor: 'pointer' }}>
-          For Job Seekers
-        </Typography>
-        <Typography variant="subtitle1" onClick={handleTeamClick} style={{ cursor: 'pointer' }}>
-          For Recruiters
-        </Typography>
-      </Box>
-
-      {showTeamForm ? (
-
-        <Box marginTop="16px"> 
-          <TextField
-            label="Email Address of the Recruiter"
-            variant="outlined"
-            fullWidth
-            margin="dense"
-            value={teamUsername}
-            onChange={handleTeamUsernameChange}
-          />   
-          <TextField
-            id="teamPassword"
-            label="Password of the Recruiter"
-            variant="outlined"
-            fullWidth
-            type={showTeamPassword ? "text" : "password"}
-            value={teamPassword}
-            onChange={handleTeamPasswordChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={toggleTeamPasswordVisibility}>
-                    {showTeamPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            
-          />
-           
-          <Box display="flex" justifyContent="center" marginTop="16px">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={signing2}
-              style={{ width: '50%' }}
-            >
-              Sign In
-            </Button>
-          </Box>
-        </Box>
-      ) : (
         <Box marginTop="16px">
           <TextField
             label="Email Address"
             variant="outlined"
             fullWidth
             margin="dense"
-            value={username}
-            onChange={handleChange('username')}
+            value={email}
+            onChange={handleChange('email')}
           />
           <TextField
             id="inputPassword5"
@@ -190,16 +134,26 @@ export default function LoginTeam() {
           />
           <Box display="flex" justifyContent="center" marginTop="16px">
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
-              onClick={signing}
-              style={{ width: '50%' }}
+              onClick={signInCadidate}
+              style={{ width: '45%' }}
+              disabled={isLoading}
             >
               Sign In
             </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={signInRecruiter}
+              style={{ width: '45%' }}
+              disabled={isLoading}
+            >
+              Sign In Recruiter
+            </Button>
           </Box>
         </Box>
-      )}
     </Container>
+    </>
   );
 }

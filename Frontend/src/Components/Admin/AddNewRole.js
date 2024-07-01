@@ -15,7 +15,9 @@ import {
 import { styled } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-// import { domain, server } from '../constants/config';
+import { domain, server } from '../../constants/config';
+import { useNavigate } from 'react-router-dom';
+import { Toaster,toast } from 'react-hot-toast';
 
 const OpenDialogButton = styled(Button)(({ theme }) => ({
   // margin: theme.spacing(10),
@@ -39,8 +41,10 @@ const AddRoleButton = styled(Button)(({ theme }) => ({
 }));
 
 const FormComponent = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [imageData, setImageData] = useState('');
+  const [isLoading,setIsLoading]=useState(false);
   const [formData, setFormData] = useState({
     role: "",
     description: '',
@@ -58,15 +62,15 @@ const FormComponent = () => {
     setOpen(false);
     setFormData({
       role: '',
-    description: '',
-    company: '',
-    salary: '',
-    location: '',
-    logo: null,
+      description: '',
+      company: '',
+      salary: '',
+      location: '',
+      logo: null,
     });
   };
 
- 
+
 
   const handleLogoChange = (e) => {
     setFormData({
@@ -92,57 +96,69 @@ const FormComponent = () => {
     });
   };
 
-  const handleSubmit = async() => {
-    const newobj={
+  const handleSubmit = async () => {
+
+    const newobj = {
       Role: formData.role,
-    description: formData.description,
-    company: formData.company,
-    salary: formData.salary,
-    location: formData.location,
-    logo: imageData,
+      description: formData.description,
+      company: formData.company,
+      salary: formData.salary,
+      location: formData.location,
+      logo: imageData,
     }
-    // console.log(formData.company);
-    try{
-      const newpromise=await fetch('http://localhost:3000/api/v1/work/createnew',{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization':localStorage.getItem('token')
-      },
-      body: JSON.stringify(newobj)
-    })
-    if (!newpromise.ok) {
-      throw new Error('Network response was not ok');
+    setIsLoading(true);
+    const toastId=toast.loading("Uploading Please wait...");
+    try {
+      const newpromise = await fetch(`${server}/api/v1/work/createnew`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newobj)
+      })
+      if (!newpromise.ok) {
+        toast.error("Try again Later",{id:toastId});
+        throw new Error('Network response was not ok');
+      }
+      const data = await newpromise.json();
+      if(data.success){
+        toast.success("Uploaded Successfully",{id:toastId});
+        setTimeout(() => {
+          navigate(0);
+        }, 500);
+      }else{
+        toast.error("Try again Later",{id:toastId});
+      }
+    } catch (error) {
+      toast.error("Try again Later",{id:toastId});
+    }finally{
+      setIsLoading(false);
     }
-    const data = await newpromise.json();
-    console.log(data);
-    alert('New Role added with given Specifications');
-    setTimeout(() => {
-      window.location.href="http://localhost:3001/admin"
-    }, 500);
-} catch (error) {
-  console.error('There has been a problem with your fetch operation:', error);
-  alert('Could  Not Add role');
-}
     handleClose();
   };
-  
+
 
   return (
-    <Container sx={{marginTop:'2%', marginLeft:'64%'}}>
+    <>
+     <Toaster
+      position="top-center"
+      reverseOrder={false}
+      />
+    <Container sx={{ marginTop: '2%', marginLeft: '64%' }}>
       <OpenDialogButton variant="contained" onClick={handleClickOpen}>
         Add New Role
       </OpenDialogButton>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm" >
-        <Grid container  style={{display:'flex'}}>
-            <Grid item xs={11}>
-                <DialogTitle>Add New Role</DialogTitle>
-            </Grid>
-            <Grid item xs={1}>
-            <IconButton aria-label="close" onClick={handleClose} xs={2} style={{alignContent:'end'}}>
-                <CloseIcon />
-                </IconButton>
-            </Grid>
+        <Grid container style={{ display: 'flex' }}>
+          <Grid item xs={11}>
+            <DialogTitle>Add New Role</DialogTitle>
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton aria-label="close" onClick={handleClose} xs={2} style={{ alignContent: 'end' }}>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
         </Grid>
         <DialogContent>
           <form onSubmit={handleSubmit}>
@@ -222,16 +238,24 @@ const FormComponent = () => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <Button 
+          onClick={handleClose} 
+          color="secondary"
+          disabled={isLoading}
+          >
             Cancel
           </Button>
-          <AddRoleButton onClick={()=>{handleSubmit()}}>
-          Add New Role
+          <AddRoleButton 
+          onClick={() => { handleSubmit() }}
+          disabled={isLoading}
+          >
+            Add New Role
           </AddRoleButton>
         </DialogActions>
       </Dialog>
     </Container>
-    
+    </>
+
   );
 };
 

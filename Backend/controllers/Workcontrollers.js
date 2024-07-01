@@ -8,7 +8,8 @@ const path=require('path')
 // create a new once
 exports.createNew=catchAsyncErrors(async(req,res,next)=>{
      const {Role,description,salary,location,company,logo}=req.body;
-     const _id=req.admin.id;
+     console.log(req.admin);
+     const _id=req.admin._id;
      const work = await Work.create({
         Role,
         description,
@@ -103,7 +104,7 @@ exports.deletework=catchAsyncErrors(async(req,res,next)=>{
     if(!isvalid){
         return next(new ErrorHander("Work not found", 401));
     }
-    if(req.headers.admin!==(isvalid.admin).toString()){
+    if((req.admin._id).toString()!==(isvalid.admin).toString()){
         console.log(req.headers.admin)
         console.log(isvalid.admin)
 

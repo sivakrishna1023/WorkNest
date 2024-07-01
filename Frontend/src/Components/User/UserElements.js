@@ -10,9 +10,7 @@ import {
   Button,
   Container,
 } from "@mui/material";
-import Appbar from "../Components/Appbar";
-import { server ,domain} from "../constants/config";
-// import { Sailing } from "@mui/icons-material";
+import { server ,domain} from "../../constants/config";
 
 const JobCards = () => {
   const [jobData, setJobData] = useState([]);
@@ -84,37 +82,8 @@ const JobCards = () => {
       });
   };
 
-  const appliedjobsfunc=async()=>{
-    fetch(`${server}/api/v1/work/appliedworks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify(),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setJobData([]);
-        setJobData(data["works"]);
-      })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
-      });
-  }
-
-  const defaultjobs=()=>{
-    window.location.href=`${domain}/user`
-  }
-
   return (
     <>
-      <Appbar name6="Delete User" name7="Sign Out" name8="Applied Jobs" clicking={appliedjobsfunc} name9="Jobs to Apply" clicking2={defaultjobs}/>
       <Container sx={{ marginTop: "100px", width: "100%" }}>
         <Grid container spacing={2}>
           <Grid item xs={9}>

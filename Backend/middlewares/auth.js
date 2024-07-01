@@ -10,10 +10,11 @@ exports.isAuthenticated=catchAsyncErrors(async(req,res,next)=>{
     return next(new ErrorHander("Please try Login",401));
   }
     const [bearer, token] = req.headers.authorization.split(' ');
-    if(!token){
+    if(!token){ 
       return next(new ErrorHander("Please Login to continue",401));
     }
     const decodedData=jwt.verify(token,process.env.JWT_SECRET);
+
     if(!decodedData){
       return next(new ErrorHander("Not found",401));
     }
@@ -33,6 +34,7 @@ exports.isAuthenticatedAdmin=catchAsyncErrors(async(req,res,next)=>{
       if(!decodedData){
         return next(new ErrorHander("Not found",401));
       }
-      req.admin=await Admin.findById(decodedData.id);
+      const admindetails=await Admin.findById(decodedData.id);
+      req.admin=admindetails;
       next();
 })

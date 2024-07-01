@@ -12,7 +12,7 @@ import {
     // makeStyles
 } from '@mui/material';
 // import {makeStyles} from '@mui/styles'
-import { domain, server } from '../constants/config';
+import { domain, server } from '../../constants/config';
 const containerStyle = {
     maxWidth: '800px', // Adjust as needed
     margin: 'auto', // Center align horizontally

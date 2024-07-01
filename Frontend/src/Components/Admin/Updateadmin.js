@@ -11,9 +11,11 @@ import {
 import { styled } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { domain, server } from "../constants/config";
+import { domain, server } from "../../constants/config";
+import { Toaster,toast } from "react-hot-toast";
 export default function Updateadmin() {
   const [open, setOpen] = useState(false);
+  const [isLoading,setIsLoading]=useState(false);
   const [formData, setFormData] = useState({
     password: "",
     company: "",
@@ -46,30 +48,40 @@ export default function Updateadmin() {
         password:formData.password,
         company:formData.company
     }
+    setIsLoading(true);
+    const toastId=toast.loading("Updating details...");
     try{
         const newpromise=await fetch(`${server}/api/v1/admin/update`,{
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'authorization':localStorage.getItem('token')
+          'authorization':`bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(newobj)
-      })
-      if (!newpromise.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await newpromise.json();
-      console.log(data);
-      alert('Updated Admin Account');
-      window.location.href=`${domain}/admin`
-  } catch (error) {
-    console.error('There has been a problem with your fetch operation:', error);
-    alert('Could  Not Update Admin Account');
-  }
+          })
+          if (!newpromise.ok) {
+            setIsLoading(false);
+            throw new Error('Network response was not ok');
+          }
+          const data = await newpromise.json();
+            if(data.success){
+              toast.success("Updated successfully...!",{id:toastId})
+            }else{
+              toast.error("Failed to update",{id:toastId});
+            }
+          } catch (error) {
+            toast.error("Failed to update",{id:toastId});
+          }finally{
+            setIsLoading(false);
+          }
     handleClose();
   };
   return (
     <div>
+       <Toaster
+      position="top-center"
+      reverseOrder={false}
+      />
       <Button
         variant="body2"
         style={{ color: "blue", background: "none", padding: "0%" }}
@@ -124,6 +136,7 @@ export default function Updateadmin() {
             Cancel
           </Button>
           <AddRoleButton
+            disabled={isLoading}
             onClick={() => {
               handleSubmit();
             }}

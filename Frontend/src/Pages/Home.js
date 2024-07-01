@@ -1,14 +1,18 @@
 import * as React from 'react';
 import Features from '../Components/Feature';
 import Hero from '../Components/Hero';
-import Appbar from '../Components/Appbar';
+import Appbar from '../shared/Appbar';
 import Footer from '../Components/Footer';
 
 
 function AppAppBar() {
+  const links=[
+    {name:"Sign Up",path:"/signup"},
+    {name:"Sign In",path:"/signin"},
+  ]
   return (
     <div>
-      <Appbar name1="Sign Up" name2="Sign In" features='features' subscription='subscription'/>
+      <Appbar features='features' subscription='subscription' links={links}/>
       <Hero/>
       <Features/>
       <Footer/>
