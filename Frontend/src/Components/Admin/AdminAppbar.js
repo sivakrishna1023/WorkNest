@@ -1,11 +1,11 @@
 import React from 'react'
 import Appbar from '../../shared/Appbar'
-import Updateadmin from './Updateadmin'
+import { server } from '../../constants/config'
 
 const AdminAppbar = () => {
     const deletingadmin=async()=>{
         try{
-          const newpromise=await fetch('http://localhost:3000/api/v1/admin/delete',{
+          const newpromise=await fetch(`${server}/api/v1/admin/delete`,{
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

@@ -34,10 +34,16 @@ export default function Appbar({features=null,subscription=null,links=[]}) {
         boxShadow: 0,
         bgcolor: "transparent",
         backgroundImage: "none",
-        mt: 2,
+        marginTop: 1,
+        marginBottom: 10
       }}
     >
-      <Container maxWidth="lg">
+      <Container 
+      maxWidth={false}
+      sx={{
+        px: 0, 
+      }}
+      >
         <Toolbar
           variant="regular"
           sx={(theme) => ({

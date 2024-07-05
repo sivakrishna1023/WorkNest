@@ -6,16 +6,40 @@ import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
 import AppBar from './shared/Appbar';
 import AdminLayout from './Pages/AdminLayout';
 import UserLayout from './Pages/UserLayout';
+import { useSelector } from 'react-redux';
+import ProtectRoute from './Components/auth/ProtectRoute';
+import { ProtectRouteCandidate,ProtectRouteRecruiter } from './Components/auth/ProtectRoute';
 
 function App() {
+  const user=useSelector((state)=>state.userdetails)
   return (
     <Router>
       <Routes>
-        <Route exact path='/signup' element={<><AppBar name1="Sign Up" name2="Sign In"/><Signup></Signup></>}/>
-        <Route exact path='/signin' element={<><AppBar name1="Sign Up" name2="Sign In"/><Signin></Signin></>}/>
-        <Route exact path='/' element={<Home></Home>}/>
-        <Route exact path='/admin/*' element={<AdminLayout></AdminLayout>}/>
-        <Route exact path='/user/*' element={<UserLayout></UserLayout>}/>
+      <Route  path='/' element={<Home></Home>}/>
+       <Route
+          element={
+            <ProtectRoute user={!user}/>
+          }
+        >
+           <Route  path='/signup' element={<><Signup></Signup></>}/>
+           <Route  path='/signin' element={<><Signin></Signin></>}/>
+        </Route>
+        <Route
+          element={
+            <ProtectRouteCandidate user={user} redirect='/'  >
+            </ProtectRouteCandidate>
+          }
+        > <Route  path='/user/*' element={<UserLayout></UserLayout>}/>
+        </Route>
+        <Route
+          element={
+            <ProtectRouteRecruiter user={user} redirect='/'  >
+            </ProtectRouteRecruiter>
+          }
+        >
+        <Route  path='/admin/*' element={<AdminLayout></AdminLayout>}/> 
+        </Route>
+
       </Routes>
     </Router>
   );

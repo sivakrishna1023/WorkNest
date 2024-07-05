@@ -28,14 +28,16 @@ const UserAppbar = () => {
             console.error("There was a problem with the fetch operation:", error);
           });
       }
+    const deleteUser=async()=>{
+    }
     const links=[
-        {name:"delete Account",path:"/"},
+        {name:"delete Account",clickingEvent: deleteUser},
         {name:"Sign Out",path:"/"},
-        {name:"Applied Jobs",clickingEvent:getAppliedJobs},
+        {name:"Applied Jobs",path:"/user/appliedjobs"},
         {name:"Jobs to Apply",path:"/user"}
       ]
   return (
-   <Appbar links={links}  >
+   <Appbar links={links} >
    </Appbar>
   )
 }

@@ -18,6 +18,7 @@
               : `linear-gradient(#02294F, ${alpha('#090E10', 0.0)})`,
           backgroundSize: '100% 20%',
           backgroundRepeat: 'no-repeat',
+          mt:10
         })}
       >
         <Container

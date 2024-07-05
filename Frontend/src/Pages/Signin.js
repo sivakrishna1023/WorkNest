@@ -33,7 +33,7 @@ export default function LoginTeam() {
       password:password
     }
     setIsLoading(true);
-    const toastId=toast.loading("Siging In...");
+    const toastId=toast.loading("Signing In...");
     try{
       const newpromise=await fetch(`${server}/api/v1/admin/login`,{
       method: 'POST',
@@ -48,11 +48,14 @@ export default function LoginTeam() {
     }
     const data = await newpromise.json();
     console.log(data);
-    if(data.succes){
-      getdetails(data?.user);
+    if(data.success){
       toast.success("Successfully signed In..",{id:toastId});
+      const user=data.user;
+      getdetails({...user,role:"Recruiter"});
       localStorage.setItem('token',data?.token);
-      navigate('/admin');
+      setTimeout(() => {
+        navigate('/admin');
+      }, 2000);
     }else{
       toast.error("Failed to sign In",{id:toastId});
     }
@@ -86,6 +89,7 @@ export default function LoginTeam() {
         if(data.success){
           toast.success('Succefully logged In..',{id:toastId});
           localStorage.setItem('token',data?.token);
+          getdetails({...user,role:"Candidate"});
           navigate('/user');
         }else{
           toast.error(data?.message || 'Try again Later',{id:toastId});

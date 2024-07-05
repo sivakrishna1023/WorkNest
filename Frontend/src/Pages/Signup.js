@@ -56,7 +56,8 @@ export default function LoginTeam(props) {
         if(data.success){
           toast.success('Sign Up successFull..!',{id:toastId});
           localStorage.setItem('token',data?.token);
-          navigate('/admin');
+          getdetails({...user,role:"Recruiter"});
+          navigate('/');
         }else{
           toast.error('Faild to SignUp try again later..',{id:toastId})
         }
@@ -92,6 +93,7 @@ export default function LoginTeam(props) {
           toast.success("SignUp successfull..!!",{id:toastId});
           localStorage.setItem('token',data?.token);
           navigate('/user');
+          getdetails({...user,role:"Candidate"});
         }else{
           toast.error("signUp failed...",{id:toastId});
         }
