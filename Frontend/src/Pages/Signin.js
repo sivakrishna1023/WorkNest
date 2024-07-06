@@ -53,9 +53,10 @@ export default function LoginTeam() {
       const user=data.user;
       getdetails({...user,role:"Recruiter"});
       localStorage.setItem('token',data?.token);
+      localStorage.setItem('token-type',"Recruiter");
       setTimeout(() => {
         navigate('/admin');
-      }, 2000);
+      }, 1000);
     }else{
       toast.error("Failed to sign In",{id:toastId});
     }
@@ -90,6 +91,7 @@ export default function LoginTeam() {
           toast.success('Succefully logged In..',{id:toastId});
           localStorage.setItem('token',data?.token);
           getdetails({...user,role:"Candidate"});
+          localStorage.setItem('token-type',"Candidate");
           navigate('/user');
         }else{
           toast.error(data?.message || 'Try again Later',{id:toastId});

@@ -37,6 +37,14 @@ exports.LoginAdmin=catchAsyncErrors(async(req,res,next)=>{
     sendTokenAdmin(admin,200,res);
 })
 
+exports.getDetails=catchAsyncErrors(async(req,res,next)=>{
+    const admin=req.Admin;
+    if(!admin) return new ErrorHander("Admin Not found",401);
+    res.status(200).json({
+        success:true,
+        admin,
+    })
+})
 // Delete Admin
 exports.deleteAdmin=catchAsyncErrors(async(req,res,next)=>{
     try {

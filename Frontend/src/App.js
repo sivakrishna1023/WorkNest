@@ -1,17 +1,47 @@
+import { useEffect } from 'react';
 import './App.css';
 import Home from './Pages/Home'
 import Signin from './Pages/Signin';
 import Signup from './Pages/Signup';
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
-import AppBar from './shared/Appbar';
 import AdminLayout from './Pages/AdminLayout';
 import UserLayout from './Pages/UserLayout';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProtectRoute from './Components/auth/ProtectRoute';
 import { ProtectRouteCandidate,ProtectRouteRecruiter } from './Components/auth/ProtectRoute';
+import axios from 'axios'
+import { server } from './constants/config';
+import { getdetails } from './redux/actioncreators/User';
 
 function App() {
   const user=useSelector((state)=>state.userdetails)
+  const dispatch=useDispatch();
+  const currUser=localStorage.getItem('token-type');
+  const url=(currUser==='Recruiter')? `${server}/api/v1/admin/me` : `${server}/api/v1/user/me`
+  useEffect(() => {
+      const UserDetails= async()=>{
+        console.log(url);
+        await axios.get(url,{ headers: {
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${localStorage.getItem('token')}`,
+        }})
+        .then((data) =>{ console.log(data)
+
+        })
+        .catch((err) =>{console.log(err)
+        });
+      }
+      axios.get(url,{ headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${localStorage.getItem('token')}`,
+      }})
+      .then((data) =>{ console.log(data)
+
+      })
+      .catch((err) =>{console.log(err)
+      });
+      // UserDetails();
+  }, [dispatch]); 
   return (
     <Router>
       <Routes>

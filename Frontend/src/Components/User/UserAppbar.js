@@ -6,6 +6,7 @@ import { server } from '../../constants/config'
 const UserAppbar = () => {
     const [jobData,setJobData]=useState([]);
     const getAppliedJobs=async()=>{
+        // console.log(isLoading);
         fetch(`${server}/api/v1/work/appliedworks`, {
           method: "POST",
           headers: {
