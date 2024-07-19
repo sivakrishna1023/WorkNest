@@ -38,11 +38,12 @@ exports.LoginAdmin=catchAsyncErrors(async(req,res,next)=>{
 })
 
 exports.getDetails=catchAsyncErrors(async(req,res,next)=>{
-    const admin=req.Admin;
+    const admin=req.admin;
+    console.log(admin);
     if(!admin) return new ErrorHander("Admin Not found",401);
     res.status(200).json({
         success:true,
-        admin,
+        user:admin,
     })
 })
 // Delete Admin

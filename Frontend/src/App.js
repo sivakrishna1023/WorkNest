@@ -11,38 +11,28 @@ import ProtectRoute from './Components/auth/ProtectRoute';
 import { ProtectRouteCandidate,ProtectRouteRecruiter } from './Components/auth/ProtectRoute';
 import axios from 'axios'
 import { server } from './constants/config';
-import { getdetails } from './redux/actioncreators/User';
-
+import {  userExists,userNotExists } from './redux/reducers/auth'
+import Loader from './Components/Loader';
 function App() {
-  const user=useSelector((state)=>state.userdetails)
+  const { user, loader } = useSelector((state) => state.auth);
   const dispatch=useDispatch();
   const currUser=localStorage.getItem('token-type');
   const url=(currUser==='Recruiter')? `${server}/api/v1/admin/me` : `${server}/api/v1/user/me`
   useEffect(() => {
       const UserDetails= async()=>{
-        console.log(url);
         await axios.get(url,{ headers: {
           'Content-Type': 'application/json',
           'authorization': `Bearer ${localStorage.getItem('token')}`,
         }})
-        .then((data) =>{ console.log(data)
-
+        .then(({data}) =>{ 
+            dispatch(userExists(data.user))
         })
-        .catch((err) =>{console.log(err)
+        .catch((err) =>{ dispatch(userNotExists(null))
         });
       }
-      axios.get(url,{ headers: {
-        'Content-Type': 'application/json',
-        'authorization': `Bearer ${localStorage.getItem('token')}`,
-      }})
-      .then((data) =>{ console.log(data)
-
-      })
-      .catch((err) =>{console.log(err)
-      });
-      // UserDetails();
+      UserDetails();
   }, [dispatch]); 
-  return (
+  return loader ? <h1>Loading...</h1> : (
     <Router>
       <Routes>
       <Route  path='/' element={<Home></Home>}/>

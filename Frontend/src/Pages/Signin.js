@@ -3,7 +3,6 @@ import { TextField, Button, Container, Typography, Box, IconButton, InputAdornme
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {actionCreators} from '../redux/index';
 import { domain, server } from '../constants/config';
 import { Toaster,toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +24,6 @@ export default function LoginTeam() {
     else if (prop === 'password') setPassword(event.target.value);
   };
   const userDetails=useSelector(state=>state.userdetails);
-  const {getdetails}=bindActionCreators(actionCreators,dispatch);
 
   const signInRecruiter=async()=>{
     const user={
@@ -51,7 +49,6 @@ export default function LoginTeam() {
     if(data.success){
       toast.success("Successfully signed In..",{id:toastId});
       const user=data.user;
-      getdetails({...user,role:"Recruiter"});
       localStorage.setItem('token',data?.token);
       localStorage.setItem('token-type',"Recruiter");
       setTimeout(() => {
@@ -90,7 +87,6 @@ export default function LoginTeam() {
         if(data.success){
           toast.success('Succefully logged In..',{id:toastId});
           localStorage.setItem('token',data?.token);
-          getdetails({...user,role:"Candidate"});
           localStorage.setItem('token-type',"Candidate");
           navigate('/user');
         }else{

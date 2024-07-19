@@ -3,7 +3,6 @@ import { TextField, Button, Container, Typography, Box, IconButton, InputAdornme
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useDispatch,  } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {actionCreators} from '../redux/index';
 import { server,domain } from '../constants/config';
 import {Toaster,toast} from 'react-hot-toast'
 import {useNavigate} from 'react-router-dom'
@@ -29,7 +28,6 @@ export default function LoginTeam(props) {
   };
   
   const dispatch=useDispatch();
-  const {getdetails}=bindActionCreators(actionCreators,dispatch);
   const signUpRecruiter=async()=>{
       const toastId=toast.loading('Signing Up....')
       const user={
@@ -38,7 +36,6 @@ export default function LoginTeam(props) {
           password:password,
           company:companyName
         }
-      getdetails(user);
       try{
          setIsLoading(true);
           const newpromise=await fetch(`${server}/api/v1/admin/register`,{
@@ -56,7 +53,6 @@ export default function LoginTeam(props) {
         if(data.success){
           toast.success('Sign Up successFull..!',{id:toastId});
           localStorage.setItem('token',data?.token);
-          getdetails({...user,role:"Recruiter"});
           navigate('/');
         }else{
           toast.error('Faild to SignUp try again later..',{id:toastId})
@@ -73,7 +69,6 @@ export default function LoginTeam(props) {
           email:email,
           password:password
         }
-        getdetails(user);
         setIsLoading(true);
         const toastId=toast.loading("SignUp In...");
         try{
@@ -93,7 +88,6 @@ export default function LoginTeam(props) {
           toast.success("SignUp successfull..!!",{id:toastId});
           localStorage.setItem('token',data?.token);
           navigate('/user');
-          getdetails({...user,role:"Candidate"});
         }else{
           toast.error("signUp failed...",{id:toastId});
         }
