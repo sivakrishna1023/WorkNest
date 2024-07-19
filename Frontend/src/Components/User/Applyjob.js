@@ -6,13 +6,14 @@ import { Container,
          Typography, 
          Box, 
          Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const ApplicationForm = () => {
   const [name, setName] = useState('');
   const [skills, setSkills] = useState('');
   const [whyJoin, setWhyJoin] = useState('');
   const [pdfFile, setPdfFile] = useState(null);
-
+  const navigate=useNavigate();
   const handleFileChange = async (e) => {
     setPdfFile( e.target.files[0]);
   };
@@ -22,7 +23,7 @@ const ApplicationForm = () => {
     setSkills('');
     setWhyJoin('');
     setPdfFile(null);
-    window.location.href = 'http://localhost:3001/user'; // Redirect example
+    navigate('/');
   };
 
   const handleApply = async (e) => {
@@ -41,9 +42,9 @@ const ApplicationForm = () => {
       const response = await fetch("http://localhost:3000/api/v1/work/applyjobs", {
         method: 'POST',
         body: formData,
-        // Don't set the Content-Type header manually; let the browser do it
         headers: {
-          'authorization': localStorage.getItem('token'), // Uncomment if you need authorization
+          // "Content-Type": "application/json",
+          authorization: localStorage.getItem("token"),
         }
       });
   

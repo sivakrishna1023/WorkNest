@@ -19,15 +19,19 @@ function App() {
   const url=(currUser==='Recruiter')? `${server}/api/v1/admin/me` : `${server}/api/v1/user/me`
   useEffect(() => {
       const UserDetails= async()=>{
+        const token=localStorage.getItem('token');
+        if(!token || !currUser){
+          dispatch(userNotExists(null));
+          return;
+        }
         try{
           const res= await axios.get(url,{ headers: {
             'Content-Type': 'application/json',
-            'authorization': `Bearer ${localStorage.getItem('token')}`,
+            'authorization': `Bearer ${token}`,
           }})
           const {data}=res;
-          console.log(data);
           if(data && data.user!==null){
-            dispatch(userExists(data.user));
+            dispatch(userExists({...data.user,role:currUser}));
           }else{
             dispatch(userNotExists(null));
           }
@@ -35,16 +39,12 @@ function App() {
           console.log(error);
           dispatch(userNotExists(null));
         }
-        
       }
       UserDetails();
   }, [dispatch]); 
   return loader ? <h1>Loading...</h1> : (
     <Router>
       <Routes>
-       {
-        user && <h1>{user}</h1>
-       }  
       <Route  path='/' element={<Home></Home>}/>
        <Route
           element={

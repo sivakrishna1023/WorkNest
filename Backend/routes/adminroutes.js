@@ -4,7 +4,8 @@ const {
     LoginAdmin,
     deleteAdmin,
     updateAdmin,
-    getDetails
+    getDetails,
+    logoutadmin
 }=require('../controllers/Admincontrollers');
 
 const {isAuthenticatedAdmin}=require('../middlewares/auth')
@@ -20,5 +21,7 @@ router.route('/me').get(isAuthenticatedAdmin,getDetails);
 router.route('/delete').delete(isAuthenticatedAdmin,deleteAdmin);
 
 router.route('/update').put(isAuthenticatedAdmin,updateAdmin);
+
+router.route('/logout').get(isAuthenticatedAdmin,logoutadmin);
 
 module.exports = router;

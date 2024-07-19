@@ -90,5 +90,8 @@ exports.updateAdmin=catchAsyncErrors(async(req,res,next)=>{
 
 //Log Out Admin
 exports.logoutadmin=catchAsyncErrors(async(req,res)=>{
-    
+    res.json({
+        success: true,
+        message:"Logged Out SuccessFully"
+    })
 })

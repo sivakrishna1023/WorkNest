@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { domain, server } from '../constants/config';
 import { Toaster,toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { userExists } from '../redux/reducers/auth';
 
 export default function LoginTeam() {
   const navigate=useNavigate();
@@ -23,9 +23,8 @@ export default function LoginTeam() {
     if (prop === 'email') setEmail(event.target.value);
     else if (prop === 'password') setPassword(event.target.value);
   };
-  const userDetails=useSelector(state=>state.userdetails);
 
-  const signInRecruiter=async()=>{
+const signInRecruiter=async()=>{
     const user={
       email:email,
       password:password
@@ -45,15 +44,13 @@ export default function LoginTeam() {
       throw new Error('Network response was not ok');
     }
     const data = await newpromise.json();
-    console.log(data);
     if(data.success){
       toast.success("Successfully signed In..",{id:toastId});
       const user=data.user;
       localStorage.setItem('token',data?.token);
       localStorage.setItem('token-type',"Recruiter");
-      setTimeout(() => {
-        navigate('/admin');
-      }, 1000);
+      dispatch(userExists({...data.user,role:"Recruiter"}))
+      navigate('/')
     }else{
       toast.error("Failed to sign In",{id:toastId});
     }
@@ -64,7 +61,7 @@ export default function LoginTeam() {
       setIsLoading(false);
     } 
 }
-    const signInCadidate=async()=>{
+const signInCadidate=async()=>{
         const user={
           email:email,
           password:password
@@ -88,13 +85,14 @@ export default function LoginTeam() {
           toast.success('Succefully logged In..',{id:toastId});
           localStorage.setItem('token',data?.token);
           localStorage.setItem('token-type',"Candidate");
-          navigate('/user');
+          dispatch(userExists({...data.user,role:"Candidate"}))
+          navigate('/');
         }else{
           toast.error(data?.message || 'Try again Later',{id:toastId});
         }
       } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
-        toast.error("Try again Later...",toastId);
+        toast.error("Try again Later...",{id:toastId});
       }finally{
         setIsLoading(false);
       }

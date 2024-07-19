@@ -7,6 +7,7 @@ const {
    getAllUsers,
    getSingleUser,
    updateUser,
+   logoutuser
 } =require('../controllers/Usercontrollers')
 
 const {isAuthenticated}= require("../middlewares/auth");
@@ -17,8 +18,6 @@ router.route("/register").post(registerUser);
 
 router.route("/login").post(loginUser);
 
-// router.route("/logout").get(logout);
-
 router.route("/me").get(isAuthenticated,getUserdatails);
 
 router.route("/allusers").get(isAuthenticated,getAllUsers);
@@ -28,5 +27,7 @@ router.route("/singleuser").get(isAuthenticated,getSingleUser);
 router.route("/me/update").put(isAuthenticated,updateUser);
 
 router.route("/delete/account").delete(isAuthenticated,deleteUser);
+
+router.route("/logout").get(isAuthenticated,logoutuser);
 
 module.exports = router;

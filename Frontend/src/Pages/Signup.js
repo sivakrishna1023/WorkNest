@@ -14,8 +14,8 @@ export default function LoginTeam(props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [companyName,setCompanyName]=useState('');
-
   const [showPassword,setShowPassword]=useState(false);
+  const dispatch=useDispatch();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -27,8 +27,6 @@ export default function LoginTeam(props) {
     else if (prop === 'Email') setEmail(event.target.value);
     else if(prop=='companyName')  setCompanyName(event.target.value);
   };
-  
-  const dispatch=useDispatch();
 
   const signUpRecruiter=async()=>{
       const toastId=toast.loading('Signing Up....')
@@ -55,7 +53,9 @@ export default function LoginTeam(props) {
         if(data.success){
           toast.success('Sign Up successFull..!',{id:toastId});
           dispatch(userExists({...data.user,role:"Recruiter"}))
+          navigate('/')
           localStorage.setItem('token',data?.token);
+          localStorage.setItem('token-type',"Recruiter")
         }else{
           toast.error('Faild to SignUp try again later..',{id:toastId})
         }
@@ -88,8 +88,10 @@ export default function LoginTeam(props) {
         const data = await newpromise.json();
         if(data.success){
           toast.success("SignUp successfull..!!",{id:toastId});
-          dispatch(userExists({...data.user,role:"Recruiter"}))
+          dispatch(userExists({...data.user,role:"Candidate"}))
+          navigate('/');
           localStorage.setItem('token',data?.token);
+          localStorage.setItem('token-type',"Candidate")
         }else{
           toast.error("signUp failed...",{id:toastId});
         }

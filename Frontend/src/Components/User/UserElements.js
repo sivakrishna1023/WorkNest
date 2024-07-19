@@ -11,6 +11,7 @@ import {
   Container,
 } from "@mui/material";
 import { server ,domain} from "../../constants/config";
+import { useNavigate } from "react-router-dom";
 
 const JobCards = () => {
   const [jobData, setJobData] = useState([]);
@@ -18,10 +19,11 @@ const JobCards = () => {
   const [salary, setSalary] = useState(0);
   const [location, setLocation] = useState("");
   const [company, setCompany] = useState("");
+  const navigate=useNavigate();
   
   const jobapplication=(job)=>{
     localStorage.setItem('jobid',job._id);
-    window.location.href=`${domain}/applyjob`;
+    navigate(`/user/applyjob`);
   }
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const JobCards = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            authorization: localStorage.getItem("token"),
+            "authorization": `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
@@ -50,7 +52,7 @@ const JobCards = () => {
     };
 
     fetchJobs();
-  }, []); // Ensure this runs only once
+  }, []);
 
   const handleFilter = async () => {
     const newobj = {

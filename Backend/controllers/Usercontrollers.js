@@ -95,5 +95,8 @@ exports.deleteUser=catchAsyncErrors(async(req,res,next)=>{
 
 //Log Out User
 exports.logoutuser=catchAsyncErrors(async(req,res)=>{
-    process.env.JWT_EXPIRE=0;
+    res.json({
+        success: true,
+        message:"Logged Out SuccessFully"
+    })
 })

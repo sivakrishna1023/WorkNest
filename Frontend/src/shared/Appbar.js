@@ -8,6 +8,7 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate } from "react-router-dom";
 
 export default function Appbar({features=null,subscription=null,links=[]}) {
   const logoStyle = {
@@ -17,7 +18,7 @@ export default function Appbar({features=null,subscription=null,links=[]}) {
   };
 
   const [open, setOpen] = React.useState(false);
-
+  const navigate=useNavigate();
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -118,7 +119,7 @@ export default function Appbar({features=null,subscription=null,links=[]}) {
                               <Button
                                 variant="body2"
                                 style={{ color: "blue", background: "none", padding: "0%" }}
-                                href={data.path}
+                                onClick={()=>navigate(data.path)}
                               >
                                 {data.name}
                               </Button>
@@ -190,7 +191,7 @@ export default function Appbar({features=null,subscription=null,links=[]}) {
                               <Button
                                 variant="body2"
                                 style={{ color: "blue", background: "none", padding: "0%" }}
-                                href={data.path}
+                                onClick={()=>navigate(data.path)}
                               >
                                 {data.name}
                               </Button>
