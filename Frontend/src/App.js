@@ -12,7 +12,6 @@ import { ProtectRouteCandidate,ProtectRouteRecruiter } from './Components/auth/P
 import axios from 'axios'
 import { server } from './constants/config';
 import {  userExists,userNotExists } from './redux/reducers/auth'
-import Loader from './Components/Loader';
 function App() {
   const { user, loader } = useSelector((state) => state.auth);
   const dispatch=useDispatch();
@@ -20,21 +19,32 @@ function App() {
   const url=(currUser==='Recruiter')? `${server}/api/v1/admin/me` : `${server}/api/v1/user/me`
   useEffect(() => {
       const UserDetails= async()=>{
-        await axios.get(url,{ headers: {
-          'Content-Type': 'application/json',
-          'authorization': `Bearer ${localStorage.getItem('token')}`,
-        }})
-        .then(({data}) =>{ 
-            dispatch(userExists(data.user))
-        })
-        .catch((err) =>{ dispatch(userNotExists(null))
-        });
+        try{
+          const res= await axios.get(url,{ headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${localStorage.getItem('token')}`,
+          }})
+          const {data}=res;
+          console.log(data);
+          if(data && data.user!==null){
+            dispatch(userExists(data.user));
+          }else{
+            dispatch(userNotExists(null));
+          }
+        }catch(error){
+          console.log(error);
+          dispatch(userNotExists(null));
+        }
+        
       }
       UserDetails();
   }, [dispatch]); 
   return loader ? <h1>Loading...</h1> : (
     <Router>
       <Routes>
+       {
+        user && <h1>{user}</h1>
+       }  
       <Route  path='/' element={<Home></Home>}/>
        <Route
           element={

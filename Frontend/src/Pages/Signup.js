@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { server,domain } from '../constants/config';
 import {Toaster,toast} from 'react-hot-toast'
 import {useNavigate} from 'react-router-dom'
+import { userExists,userNotExists } from '../redux/reducers/auth';
 export default function LoginTeam(props) {
   const navigate=useNavigate();
   const [isLoading,setIsLoading]=useState(false);
@@ -28,6 +29,7 @@ export default function LoginTeam(props) {
   };
   
   const dispatch=useDispatch();
+
   const signUpRecruiter=async()=>{
       const toastId=toast.loading('Signing Up....')
       const user={
@@ -52,8 +54,8 @@ export default function LoginTeam(props) {
         const data = await newpromise.json();
         if(data.success){
           toast.success('Sign Up successFull..!',{id:toastId});
+          dispatch(userExists({...data.user,role:"Recruiter"}))
           localStorage.setItem('token',data?.token);
-          navigate('/');
         }else{
           toast.error('Faild to SignUp try again later..',{id:toastId})
         }
@@ -86,8 +88,8 @@ export default function LoginTeam(props) {
         const data = await newpromise.json();
         if(data.success){
           toast.success("SignUp successfull..!!",{id:toastId});
+          dispatch(userExists({...data.user,role:"Recruiter"}))
           localStorage.setItem('token',data?.token);
-          navigate('/user');
         }else{
           toast.error("signUp failed...",{id:toastId});
         }
