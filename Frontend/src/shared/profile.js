@@ -6,12 +6,14 @@ import { Container,
          Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UpdateIcon from '@mui/icons-material/Update';
+import {useSelector} from 'react-redux'
 
 const ProfilePage = () => {
-  const [userName, setUserName] = useState('');
+  const {user}=useSelector((state)=>state.auth);
+  
+  const [userName, setUserName] = useState(user.name);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-
   const handleUpdate = () => {
     console.log('Updated:', { userName, password, email });
   };
@@ -19,7 +21,11 @@ const ProfilePage = () => {
   const handleDelete = () => {
     console.log('Profile Deleted');
   };
-
+  if(!user){
+    return(
+      <Typography>Please Try Login</Typography>
+    )
+  }
   return (
     <Container maxWidth="sm"  sx={{mt:12,paddingTop:3}}   >
       <Box sx={{ mt: 4 }}>
@@ -48,7 +54,7 @@ const ProfilePage = () => {
           label="Company Email"
           variant="outlined"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          disabled={true}
           sx={{ mb: 2 }}
         />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>

@@ -9,17 +9,16 @@ import {
     Paper,
     Typography,
     Button,
-    // makeStyles
+   
 } from '@mui/material';
-// import {makeStyles} from '@mui/styles'
 import { domain, server } from '../../constants/config';
 const containerStyle = {
-    maxWidth: '800px', // Adjust as needed
-    margin: 'auto', // Center align horizontally
-    marginTop: '50px', // Provide top margin for spacing
+    maxWidth: '800px', 
+    margin: 'auto', 
+    marginTop: '50px', 
     padding: '20px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for box effect
-    borderRadius: '8px', // Optional: Add rounded corners
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', 
+    borderRadius: '8px', 
 };
 
 const Applicants = () => {
@@ -30,8 +29,6 @@ const Applicants = () => {
         const searchParams = new URLSearchParams(window.location.search);
         const id = searchParams.get('id');
         setQueryId(id);
-
-        // Fetch applicant data using the `id` query parameter
         if (id) {
             fetch(`${server}/api/v1/work/workapplicants?id=${id}`,{
                 method: 'GET',

@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, 
          TextField, 
          Button, 
@@ -7,6 +6,10 @@ import { Container,
          Box, 
          Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { server } from '../../constants/config';
+import axios from 'axios'
+import { Toaster,toast } from 'react-hot-toast';
 
 const ApplicationForm = () => {
   const [name, setName] = useState('');
@@ -14,6 +17,31 @@ const ApplicationForm = () => {
   const [whyJoin, setWhyJoin] = useState('');
   const [pdfFile, setPdfFile] = useState(null);
   const navigate=useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const jobid = query.get('jobid');
+  const [isLoading,setIsLoading]=useState(false);
+  
+  useEffect(()=>{
+    const getJobDetails=async()=>{
+      try{
+           const response=await axios.get(`${server}/api/v1/work/details`,{
+           headers: {
+             "authorization": `Bearer ${localStorage.getItem("token")}`,
+             "id":jobid
+           }})
+           const {data}=response;
+           if(!data){
+             console.log("Error in getting Detail's");
+             return;
+           }
+           console.log(data);
+      }catch(error){
+       console.log("Error in getting detail's",error);
+      }
+     }
+     getJobDetails();
+  },[])
   const handleFileChange = async (e) => {
     setPdfFile( e.target.files[0]);
   };
@@ -23,49 +51,45 @@ const ApplicationForm = () => {
     setSkills('');
     setWhyJoin('');
     setPdfFile(null);
-    navigate('/');
+    navigate('/user');
   };
 
   const handleApply = async (e) => {
     e.preventDefault();
-    
     const formData = new FormData();
     formData.append("name", name);
     formData.append("skills", skills);
     formData.append("whyJoin", whyJoin);
     formData.append("file", pdfFile);
-    formData.append("jobid", localStorage.getItem('jobid'));
-    
-    console.log(pdfFile);
-  
+    formData.append("jobid", jobid);
+    setIsLoading(true);
+    const toastId=toast.loading("Please Wait Sending Application");
     try {
-      const response = await fetch("http://localhost:3000/api/v1/work/applyjobs", {
-        method: 'POST',
-        body: formData,
+      const response = await axios.post(`${server}/api/v1/work/applyjobs`, formData, {
         headers: {
-          // "Content-Type": "application/json",
-          authorization: localStorage.getItem("token"),
+          "authorization": `Bearer ${localStorage.getItem("token")}`,
         }
       });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
+      if(response){
+        toast.success("Applied to Job",{id:toastId});
       }
-  
-      const result = await response.json(); // Assuming the response is in JSON format
-      alert("work Applied Successfully");
-      window.location.href='http://localhost:3001/user'
-      console.log(result);
+      navigate('/user/appliedjobs');
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
+      toast.error("Failed to Apply",{id:toastId});
+      console.error('There was a problem with the axios operation:', error);
+    }finally{
+      setIsLoading(false);
     }
   };
   
-
   return (
     <>
+     <Toaster
+      position="top-center"
+      reverseOrder={false}
+      />
     <Container component="main" maxWidth="sm">
-      <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
+      <Paper elevation={3} sx={{ padding: 4, marginTop: 15}}>
         <Typography variant="h4" gutterBottom>
           Application Form
         </Typography>
@@ -119,19 +143,15 @@ const ApplicationForm = () => {
             <Button variant="contained" color="secondary" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" type='submit' onClick={handleApply}>
+            <Button 
+            disabled={isLoading}
+            variant="contained" color="primary" type='submit' onClick={handleApply}>
               Apply
             </Button>
           </Box>
         </Box>
       </Paper>
     </Container>
-    {/* <form action="http://localhost:3000/upload" method="post" enctype="multipart/form-data">
-  <input type="file" name="file" />
-  <button variant="contained" color="primary" type='submit'>
-              Apply
-            </button>
-</form> */}
     </>
   );
 };

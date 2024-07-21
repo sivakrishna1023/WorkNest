@@ -73,7 +73,6 @@ exports.details=catchAsyncErrors(async(req,res,next)=>{
     const id=req.headers.id;
     console.log(id);
     const isvalid=await Work.findById(id);
-    console.log(isvalid);
     if(!isvalid){
         return next(new ErrorHander("Work not found", 401));
     }
@@ -179,7 +178,6 @@ exports.byvariables=catchAsyncErrors(async(req,res,next)=>{
   if (place !== undefined && place !== null && place !== '') {
     query.location = place;
   } else {
-    // Ensure location is not empty if place is not provided
     query.location = { $ne: '' };
   }
   if (name !== undefined && name !== null && name !== '') {
@@ -188,11 +186,6 @@ exports.byvariables=catchAsyncErrors(async(req,res,next)=>{
   if (company !== undefined && company !== null && company !== '') {
     query.company = company;
   }
-
-  // Log the query object for debugging
-  console.log('Query:', query);
-
-  // If no criteria specified, return all documents
   const works = await Work.find(query);
         const reqworks = [];
         for (const work of works) {

@@ -4,31 +4,6 @@ import { server } from '../../constants/config'
 
 
 const UserAppbar = () => {
-    const [jobData,setJobData]=useState([]);
-    const getAppliedJobs=async()=>{
-        // console.log(isLoading);
-        fetch(`${server}/api/v1/work/appliedworks`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: localStorage.getItem("token"),
-          },
-          body: JSON.stringify(),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok " + response.statusText);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            setJobData([]);
-            setJobData(data["works"]);
-          })
-          .catch((error) => {
-            console.error("There was a problem with the fetch operation:", error);
-          });
-      }
     const deleteUser=async()=>{
     }
     const links=[

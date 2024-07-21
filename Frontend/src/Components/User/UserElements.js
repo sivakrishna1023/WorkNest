@@ -10,8 +10,9 @@ import {
   Button,
   Container,
 } from "@mui/material";
-import { server ,domain} from "../../constants/config";
+import { server , domain} from "../../constants/config";
 import { useNavigate } from "react-router-dom";
+import { Toaster,toast } from "react-hot-toast";
 
 const JobCards = () => {
   const [jobData, setJobData] = useState([]);
@@ -20,16 +21,14 @@ const JobCards = () => {
   const [location, setLocation] = useState("");
   const [company, setCompany] = useState("");
   const navigate=useNavigate();
-  
+  const [isLoading,setIsLoading]=useState(false);
   const jobapplication=(job)=>{
-    localStorage.setItem('jobid',job._id);
-    navigate(`/user/applyjob`);
+    navigate(`/user/applyjob?jobid=${job._id}`);
   }
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        console.log("Sending fetch request...");
         const response = await fetch(`${server}/api/v1/work/alljobs`, {
           method: "GET",
           headers: {
@@ -61,31 +60,39 @@ const JobCards = () => {
       place: location,
       company: company,
     };
+    setIsLoading(true);
+    const toastId=toast.loading("Filtering your result");
     fetch(`${server}/api/v1/work/jobsbyvariables`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: localStorage.getItem("token"),
+        "authorization": `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(newobj),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
+          toast.error("Failed to Filter",{id:toastId});  
         }
         return response.json();
       })
       .then((data) => {
         setJobData([]);
         setJobData(data["works"]);
+        toast.success("Here your results",{id:toastId});
       })
       .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
+        toast.error("Failed to Filter",{id:toastId});        
       });
+      setIsLoading(false);
   };
 
   return (
     <>
+     <Toaster
+      position="top-center"
+      reverseOrder={false}
+      />
       <Container sx={{ marginTop: "100px", width: "100%" }}>
         <Grid container spacing={2}>
           <Grid item xs={9}>
@@ -132,6 +139,7 @@ const JobCards = () => {
                           color="primary"
                           variant="contained"
                           sx={{ marginTop: "8px" }}
+                          disabled={isLoading}
                           onClick={() => {jobapplication(job)}}
                         >
                           Apply Now
@@ -149,7 +157,7 @@ const JobCards = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 position: "sticky",
-                top: 100, // This will move the FilterComponent 100px down from the top
+                top: 100,
                 p: 2,
                 width: "100%",
               }}
@@ -226,6 +234,7 @@ const JobCards = () => {
                       width="30%"
                       variant="contained"
                       color="primary"
+                      disabled={isLoading}
                       onClick={handleFilter}
                     >
                       Filter

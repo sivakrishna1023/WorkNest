@@ -34,7 +34,7 @@ const AdminAppbar = () => {
   const links=[
     {name:"delete Account",clickingEvent: deletingadmin},
     {name:"Sign Out",path:"/"},
-    {name:"Update Details",path:"/update"}
+    {name:"Update Details",path:"/admin/profile"}
   ]
   return (
       <Appbar links={links}  ></Appbar>

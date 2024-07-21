@@ -70,8 +70,6 @@ const FormComponent = () => {
     });
   };
 
-
-
   const handleLogoChange = (e) => {
     setFormData({
       ...formData,
@@ -145,7 +143,7 @@ const FormComponent = () => {
       position="top-center"
       reverseOrder={false}
       />
-    <Container sx={{ marginTop: '2%', marginLeft: '64%' }}>
+    <Container sx={{ marginTop: '2%'}}>
       <OpenDialogButton variant="contained" onClick={handleClickOpen}>
         Add New Role
       </OpenDialogButton>
@@ -156,7 +154,7 @@ const FormComponent = () => {
           </Grid>
           <Grid item xs={1}>
             <IconButton aria-label="close" onClick={handleClose} xs={2} style={{ alignContent: 'end' }}>
-              <CloseIcon />
+              <CloseIcon/>
             </IconButton>
           </Grid>
         </Grid>
