@@ -29,7 +29,7 @@ const Appliedjobs = () => {
         getAppliedJobs();
     },[])
   return (
-   <Container style={{marginTop:100}}  >
+   <Container style={{marginTop:100}}>
    <Typography>Hello world</Typography>
    </Container>
   )

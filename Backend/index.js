@@ -4,7 +4,7 @@ const path=require("path");
 const connectDatabase=require('./config/database');
 const cors=require('cors')
 connectDatabase();
-
+  
 app.use(cors({
     origin:"http://localhost:3001",
     methods:["GET","POST","PUT","DELETE"],
