@@ -1,6 +1,7 @@
 const ErrorHander=require('../utils/errorhandler');
 const catchAsyncErrors=require('../middlewares/catchAsyncerrors');
 const Admin=require('../models/Adminmodel');
+const Work=require('../models/workmodel');
 const sendTokenAdmin=require('../utils/jwtToken');
 const sendEmail=require('../utils/sendEmail');
 const crypto = require("crypto");
@@ -36,7 +37,7 @@ exports.LoginAdmin=catchAsyncErrors(async(req,res,next)=>{
     }
     sendTokenAdmin(admin,200,res);
 })
-
+// Get User Details
 exports.getDetails=catchAsyncErrors(async(req,res,next)=>{
     const admin=req.admin;
     console.log(admin);
@@ -49,20 +50,14 @@ exports.getDetails=catchAsyncErrors(async(req,res,next)=>{
 // Delete Admin
 exports.deleteAdmin=catchAsyncErrors(async(req,res,next)=>{
     try {
-        // Delete the Admin by ID
         await Admin.findByIdAndDelete(req.admin._id);
         const adminId = req.admin._id;
-    
-        // Delete all works associated with the Admin
         await Work.deleteMany({ admin: adminId });
-    
-        // Send success response
         res.status(200).json({
           success: true,
           message: 'Admin and associated works deleted successfully',
         });
       } catch (err) {
-        // Handle any errors
         console.error('Error deleting documents:', err);
         res.status(500).json({
           success: false,
@@ -74,7 +69,6 @@ exports.deleteAdmin=catchAsyncErrors(async(req,res,next)=>{
 // Update the Admin
 exports.updateAdmin=catchAsyncErrors(async(req,res,next)=>{
     const newdetails={name:req.body.name,
-            password:req.body.password,
             company:req.body.company,
     }
     const admin = await Admin.findByIdAndUpdate(req.admin._id, newdetails, {

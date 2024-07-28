@@ -4,7 +4,7 @@ import UserElement from '../Components//User/UserElements'
 import Applyjob from '../Components/User/Applyjob'
 import UserAppbar from '../Components/User/UserAppbar';
 import Appliedjobs from '../Components/User/Appliedjobs';
-
+import UserProfile from '../Components/User/UserProfile';
 
 const UserLayout = () => {
   return (
@@ -14,7 +14,7 @@ const UserLayout = () => {
         <Route exact path='/' element={<UserElement/>}/>
         <Route exact path='/applyjob' element={<Applyjob/>}/>
         <Route exact path='/appliedjobs' element={<Appliedjobs/>}/>
-
+        <Route exact path='/profile' element={<UserProfile/>}/>
     </Routes>
     </>
   )

@@ -70,7 +70,6 @@ exports.getSingleUser=catchAsyncErrors(async(req,res,next)=>{
 //Update the User datails
 exports.updateUser=catchAsyncErrors(async(req,res,next)=>{
     const newdetails={name:req.body.name,
-            password:req.body.password
     }
     // const user=await User.findById(req.user.id);
     const user = await User.findByIdAndUpdate(req.user.id, newdetails, {

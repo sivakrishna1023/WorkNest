@@ -6,6 +6,7 @@ import { domain, server } from '../constants/config';
 import { Toaster,toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { userExists } from '../redux/reducers/auth';
+import {Link} from 'react-router-dom';
 
 export default function LoginTeam() {
   const navigate=useNavigate();
@@ -14,7 +15,9 @@ export default function LoginTeam() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  
+  const handleClick = () => {
+    navigate('/signin');
+  };
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -153,7 +156,13 @@ const signInCadidate=async()=>{
             </Button>
           </Box>
         </Box>
-    </Container>
+        <Typography marginTop={2} marginLeft={7} align="right">
+         New Here{' '}
+      <Link to={'/signup'} underline="none" color="primary">
+        SignUp
+      </Link>
+    </Typography>  
+      </Container>
     </>
   );
 }

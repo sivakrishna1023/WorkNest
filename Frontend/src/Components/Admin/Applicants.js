@@ -9,17 +9,12 @@ import {
     Paper,
     Typography,
     Button,
+    Container,
    
 } from '@mui/material';
 import { domain, server } from '../../constants/config';
-const containerStyle = {
-    maxWidth: '800px', 
-    margin: 'auto', 
-    marginTop: '50px', 
-    padding: '20px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', 
-    borderRadius: '8px', 
-};
+import axios from 'axios';
+
 
 const Applicants = () => {
     const [applicants, setApplicants] = useState([]);
@@ -29,21 +24,23 @@ const Applicants = () => {
         const searchParams = new URLSearchParams(window.location.search);
         const id = searchParams.get('id');
         setQueryId(id);
-        if (id) {
-            fetch(`${server}/api/v1/work/workapplicants?id=${id}`,{
-                method: 'GET',
-                headers: {
-                  'authorization': localStorage.getItem('token')
-        }})
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {console.log(data.applicants);setApplicants(data.applicants);})
-                .catch(error => console.error('Error fetching applicants', error));
+        const getApplicant= async()=>{
+            if (id) {
+                try {
+                    const response = await axios.get(`${server}/api/v1/work/workapplicants`, {
+                        params: { id },
+                        headers: {
+                            'authorization': `bearer ${localStorage.getItem('token')}` 
+                        }
+                    });
+                    console.log(response.data.applicants);
+                    setApplicants(response.data.applicants);
+                } catch (error) {
+                    console.error('Error fetching applicants', error);
+                }
+            }
         }
+        getApplicant();
     }, []);
 
     const handleDownload = (path) => {
@@ -71,7 +68,14 @@ const Applicants = () => {
         .catch(error => console.error('Error downloading file', error));
     };
     return (
-        <div style={containerStyle}>
+        <Container style={{
+            maxWidth: '800px', 
+            margin: 'auto', 
+            marginTop: '8rem', 
+            padding: '20px',
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', 
+            borderRadius: '8px', 
+        }}>
             <Typography variant="h2" align="center" gutterBottom>
                 Applicants
             </Typography>
@@ -117,7 +121,7 @@ const Applicants = () => {
                     No ID parameter found in the URL
                 </Typography>
             )}
-        </div>
+        </Container>
     );
 };
 

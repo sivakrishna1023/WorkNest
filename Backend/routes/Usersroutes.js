@@ -24,9 +24,9 @@ router.route("/allusers").get(isAuthenticated,getAllUsers);
 
 router.route("/singleuser").get(isAuthenticated,getSingleUser);
 
-router.route("/me/update").put(isAuthenticated,updateUser);
+router.route("/update").put(isAuthenticated,updateUser);
 
-router.route("/delete/account").delete(isAuthenticated,deleteUser);
+router.route("/delete").delete(isAuthenticated,deleteUser);
 
 router.route("/logout").get(isAuthenticated,logoutuser);
 

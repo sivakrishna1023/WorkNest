@@ -36,7 +36,6 @@ function App() {
             dispatch(userNotExists(null));
           }
         }catch(error){
-          console.log(error);
           dispatch(userNotExists(null));
         }
       }

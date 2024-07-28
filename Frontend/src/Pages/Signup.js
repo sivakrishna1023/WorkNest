@@ -7,6 +7,7 @@ import { server,domain } from '../constants/config';
 import {Toaster,toast} from 'react-hot-toast'
 import {useNavigate} from 'react-router-dom'
 import { userExists,userNotExists } from '../redux/reducers/auth';
+import { Link } from 'react-router-dom';
 export default function LoginTeam(props) {
   const navigate=useNavigate();
   const [isLoading,setIsLoading]=useState(false);
@@ -178,7 +179,12 @@ export default function LoginTeam(props) {
             </Button>
           </Box>
         </Box>
-    
+        <Typography marginTop={2} marginLeft={7} align="right">
+         Already Had Account {' '}
+      <Link to={'/signin'} underline="none" color="primary">
+        SignIn
+      </Link>
+    </Typography>  
     </Container>
     </>
   );

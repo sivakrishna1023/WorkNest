@@ -18,7 +18,11 @@ exports.isAuthenticated=catchAsyncErrors(async(req,res,next)=>{
     if(!decodedData){
       return next(new ErrorHander("Not found",401));
     }
-    req.user=await User.findById(decodedData.id);
+    currentUser=await User.findById(decodedData.id);
+    if(!currentUser){
+      return next(new ErrorHander("User Not found",400));
+    }
+    req.user=currentUser
     next();
 });
 
@@ -36,5 +40,8 @@ exports.isAuthenticatedAdmin=catchAsyncErrors(async(req,res,next)=>{
       }
       const admindetails=await Admin.findById(decodedData.id);
       req.admin=admindetails;
+      if(!admindetails){
+        return next(new ErrorHander("Admin Not found",400));
+      }
       next();
 })

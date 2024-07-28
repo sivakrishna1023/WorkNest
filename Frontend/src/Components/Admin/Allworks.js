@@ -39,6 +39,10 @@ const WorkAccordion = () => {
   const LogoUpload = styled('input')({
     display: 'none',
   });
+  const handleJobApplicants=(event,work)=>{
+    event.preventDefault();
+    navigate(`/admin/workapplicants?id=${work._id}`);
+  }
   const handleLogoChange = (e) => {
     setFormData({
       ...formData,
@@ -249,7 +253,7 @@ const WorkAccordion = () => {
               variant="outlined" 
               color="primary" 
               disabled={isLoading}
-              href={`/workapplicants?id=${work._id}`} 
+              onClick={(event) => handleJobApplicants(event, work)}
               sx={{ ml: 2 }}>
                 Job Applicants
               </Button>

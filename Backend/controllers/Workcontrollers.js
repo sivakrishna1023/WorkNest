@@ -88,7 +88,6 @@ exports.applicantsofwork=catchAsyncErrors(async(req,res,next)=>{
     const id=req.query.id;
     const isvalid=await Work.findById(id);
     const reqapplicants=isvalid.applied;
-    console.log(reqapplicants);
     res.status(200).json({
         success:true,
         message:"Found Applicants",

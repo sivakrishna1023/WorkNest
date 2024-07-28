@@ -105,6 +105,8 @@ export default function Appbar({features=null,subscription=null,links=[]}) {
               </MenuItem>
               </>}
             </Box>
+
+            
             <Box 
             sx={{
               flexGrow:1,

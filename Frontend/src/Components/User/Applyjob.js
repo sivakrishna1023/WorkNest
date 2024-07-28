@@ -21,6 +21,7 @@ const ApplicationForm = () => {
   const query = new URLSearchParams(location.search);
   const jobid = query.get('jobid');
   const [isLoading,setIsLoading]=useState(false);
+  const [jobDetails,setJobDetails]=useState(null);
   
   useEffect(()=>{
     const getJobDetails=async()=>{
@@ -35,7 +36,9 @@ const ApplicationForm = () => {
              console.log("Error in getting Detail's");
              return;
            }
-           console.log(data);
+           if(data.work){
+            setJobDetails(data.work);
+           }
       }catch(error){
        console.log("Error in getting detail's",error);
       }
@@ -62,6 +65,14 @@ const ApplicationForm = () => {
     formData.append("whyJoin", whyJoin);
     formData.append("file", pdfFile);
     formData.append("jobid", jobid);
+    if(pdfFile===null){
+      toast.error("Please Provide Resume");
+      return;
+    }
+    if(name.length===0 || skills.length==0 || whyJoin.length==0){
+      toast.error("Please Provide all Details to Apply");
+      return;
+    }
     setIsLoading(true);
     const toastId=toast.loading("Please Wait Sending Application");
     try {
@@ -90,6 +101,27 @@ const ApplicationForm = () => {
       />
     <Container component="main" maxWidth="sm">
       <Paper elevation={3} sx={{ padding: 4, marginTop: 15}}>
+        {
+          jobDetails && <Box mb={4}>
+          <Typography variant='h4' >Job Details</Typography>
+          <Typography variant="h6">
+           Role:-  {jobDetails.Role}
+          </Typography>
+          <Typography variant="body1" color="textSecondary" gutterBottom>
+           Company:-  {jobDetails.company}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+           Description:-  {jobDetails.description}
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            Salary: ${jobDetails.salary}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+           Location:-  {jobDetails.location}
+          </Typography>
+        </Box>
+        }
+         
         <Typography variant="h4" gutterBottom>
           Application Form
         </Typography>
